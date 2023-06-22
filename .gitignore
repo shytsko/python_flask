@@ -1,13 +1,3 @@
 .idea
 /venv/
-/lesson1/.venv/
-/seminar1/first_project/venv/
-/seminar1/new_project/.venv/
-/seminar1/project_new/venv_new/
 __pycache__
-seminar7/task4
-seminar7/task7
-homework7/files
-.pytest*
-/homework15/task6.log
-/homework15/files/
