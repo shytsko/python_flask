@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>
+        {% block title %}
+        Мой сайт
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+<div class="top">
+    <div class="navy container">
+        <a class="navy__link" href="/home/">Home</a>
+        <a class="navy__link" href="/about/">About</a>
+        <a class="navy__link" href="/services/">Services</a>
+        <a class="navy__link" href="/blog/">Blog</a>
+        <a class="navy__link" href="/contact/">Contact</a>
+    </div>
+    <div class="content">
+        {% block content %}
+        Страница не заполнена
+        {% endblock %}
+    </div>
+    <div class="logo">
+        <div class="logo__wrapper container">
+            <img class="logo__img" src="/static/img/logo1.svg" alt="logo 1"/>
+            <img class="logo__img" src="/static/img/logo2.svg" alt="logo 2"/>
+            <img class="logo__img" src="/static/img/logo3.svg" alt="logo 3"/>
+            <img class="logo__img" src="/static/img/logo4.svg" alt="logo 4"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>
