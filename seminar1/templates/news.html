@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+<div>
+    {% for new in news %}
+    <div>
+        <h2>{{ new.header }}</h2>
+        <p>{{ new.description }}</p>
+        <p>{{ new.date }}</p>
+    </div>
+    {% endfor %}
+</div>
 </body>
 </html>

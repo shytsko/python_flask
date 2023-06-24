@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}
+{{ super() }} - {{ title }}
+{% endblock %}
+
+{% block content %}
+<h2>Обо мне</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, dolor error harum labore odio quis saepe sunt
+    veritatis? Aspernatur assumenda commodi dolorum eaque impedit inventore iusto maiores perferendis tempora vitae.</p>
+{% endblock %}
