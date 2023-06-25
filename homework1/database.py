@@ -80,3 +80,7 @@ def get_category_data(category_id):
 
 def get_goods_by_category(category_id):
     return list(filter(lambda x: x['cat_id'] == category_id, goods_data.values()))
+
+
+def get_goods_data(good_id):
+    return goods_data.get(good_id)

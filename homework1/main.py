@@ -26,8 +26,15 @@ def categories(category_id):
         'category_data': database.get_category_data(category_id),
         'goods': database.get_goods_by_category(category_id)
     }
-    print(context)
     return render_template('categories.html', **context)
+
+@app.route('/goods/<int:good_id>/')
+def goods(good_id):
+    context = {
+        'categories': database.get_all_categories(),
+        'good_data': database.get_goods_data(good_id)
+    }
+    return render_template('goods.html', **context)
 
 
 if __name__ == '__main__':
