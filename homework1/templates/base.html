@@ -39,7 +39,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 {% for category in categories %}
-                                <li><a class="dropdown-item" href="/categories/{{ category.cat_link }}/">{{ category.cat_title}}</a>
+                                <li><a class="dropdown-item" href="/categories/{{ category.cat_id }}/">{{ category.cat_title}}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -83,7 +83,7 @@
 
         {% block content %}
         <h2>E-shop</h2>
-        <h3>Интернет-магазин одежды и обуви</h3>
+        <h3>Интернет-магазин одежды, обуви и курток (больше ничего нет)</h3>
         {% endblock %}
     </div>
 </section>

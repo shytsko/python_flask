@@ -14,17 +14,20 @@ app = Flask(__name__)
 def index():
     context = {
         'title': 'Главная',
-        'categories': database.get_categories()
+        'categories': database.get_all_categories()
     }
     return render_template('index.html', **context)
 
 
-@app.route('/categories/<category>/')
-def сategories(category):
+@app.route('/categories/<category_id>/')
+def categories(category_id):
     context = {
-        'title': category
+        'categories': database.get_all_categories(),
+        'category_data': database.get_category_data(category_id),
+        'goods': database.get_goods_by_category(category_id)
     }
-    return render_template('сategories.html', **context)
+    print(context)
+    return render_template('categories.html', **context)
 
 
 if __name__ == '__main__':
