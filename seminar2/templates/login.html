@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('login') }}" method="post">
+    <input type="text" name="name" id="name" placeholder="Имя"><br>
+    <input type="password" name="password" id="password" placeholder="Пароль"><br>
+    <button type="submit">Отправить</button>
+</form>
+</body>
+</html>

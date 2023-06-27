@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('calc') }}" method="post">
+    <input type="number" name="number1" id="number1"><br>
+    <select id="operation" name="operation">
+        <option value="add">+</option>
+        <option value="subtract">-</option>
+        <option value="multiply">*</option>
+        <option value="divide">/</option>
+    </select><br>
+    <input type="number" name="number2" id="number2"><br>
+    <button type="submit">Вычислить</button>
+</form>
+</body>
+</html>
