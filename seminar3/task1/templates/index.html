@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ super() }} - {{ title }}
+{% endblock %}
+
+{% block content %}
+<h1>Главная</h1>
+<a type="button" href="{{ url_for('index') }}" class="btn btn-outline-primary">Главная</a>
+{% endblock %}

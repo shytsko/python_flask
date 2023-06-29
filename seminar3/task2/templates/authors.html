@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ super() }} - {{ title }}
+{% endblock %}
+
+{% block content %}
+<h1>Авторы</h1>
+
+{% for author in authors %}
+<h3>{{ author }}</h3>
+{% for book in author.books %}
+<p>{{ book.title }}</p>
+{% endfor %}
+{% endfor %}
+
+{% endblock %}
