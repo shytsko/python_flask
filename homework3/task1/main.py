@@ -30,36 +30,36 @@ def fill_db():
         new_faculty = Faculty(name=f"Faculty{i}")
         db.session.add(new_faculty)
 
-    students_ = [Student(
-        firstname=f"name{i}",
-        lastname=f"lastname{i}",
-        age=random.randint(18, 50),
-        gender=random.choice(["Женский", "Мужской"]),
-        group=i % count + 1,
-        email=f"name{i}@mail.com",
-        faculty_id=i % count + 1)
+    students_list = [
+        Student(firstname=f"name{i}",
+                lastname=f"lastname{i}",
+                age=random.randint(18, 50),
+                gender=random.choice(["Женский", "Мужской"]),
+                group=i % count + 1,
+                email=f"name{i}@mail.com",
+                faculty_id=i % count + 1)
         for i in range(1, count ** 2 + 1)]
 
-    db.session.add_all(students_)
+    db.session.add_all(students_list)
 
-    grades = [Grade(value=2, alias='неудовлетворительно'),
-              Grade(value=3, alias='удовлетворительно'),
-              Grade(value=4, alias='хорошо'),
-              Grade(value=5, alias='отлично')]
-    db.session.add_all(grades)
+    grades_list = [Grade(value=2, alias='неудовлетворительно'),
+                   Grade(value=3, alias='удовлетворительно'),
+                   Grade(value=4, alias='хорошо'),
+                   Grade(value=5, alias='отлично')]
+    db.session.add_all(grades_list)
 
-    disciplines = [Discipline(name='Базы данных'),
-                   Discipline(name='Алгоритмы и структуры данных'),
-                   Discipline(name='Веб-технологии'),
-                   Discipline(name='Математика'),
-                   Discipline(name='Объектно-ориентированное программирование')]
-    db.session.add_all(disciplines)
+    disciplines_list = [Discipline(name='Базы данных'),
+                        Discipline(name='Алгоритмы и структуры данных'),
+                        Discipline(name='Веб-технологии'),
+                        Discipline(name='Математика'),
+                        Discipline(name='Объектно-ориентированное программирование')]
+    db.session.add_all(disciplines_list)
 
     for _ in range(count ** 4):
         db.session.add(
-            Performance(student=random.choice(students_),
-                        discipline=random.choice(disciplines),
-                        grade=random.choice(grades)))
+            Performance(student=random.choice(students_list),
+                        discipline=random.choice(disciplines_list),
+                        grade=random.choice(grades_list)))
 
     db.session.commit()
 
