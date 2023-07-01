@@ -17,9 +17,10 @@
 # ○ Если данные формы не прошли валидацию, на странице должна быть выведена соответствующая ошибка.
 # ○ Если данные формы прошли валидацию, на странице должно быть выведено сообщение об успешной регистрации.
 
-
 from flask import Flask, render_template, request, redirect, make_response, url_for, abort
-from .models import db
+from .models import db, User
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///task2_data.db'
@@ -35,7 +36,16 @@ def init_db():
 
 @app.cli.command("fill-db")
 def fill_db():
-    pass
+    first_user = User(
+        nickname="vasya",
+        firstname="Вася",
+        lastname="Пупкин",
+        email="pupkin@mail.com",
+        birth_date=datetime(2000, 1, 1, 0, 0, 0),
+        psw_hash=generate_password_hash('abc123456')
+    )
+    db.session.add(first_user)
+    db.session.commit()
 
 
 @app.route('/')

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -5,15 +7,13 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(80), nullable=False)
+    nickname = db.Column(db.String(80), nullable=False)
+    firstname = db.Column(db.String(80), nullable=False, unique=True)
     lastname = db.Column(db.String(80), nullable=False)
-
-    # age = db.Column(db.Integer, nullable=False)
-    # gender = db.Column(db.String(10), nullable=False)
-    # group = db.Column(db.Integer, nullable=False)
-    # email = db.Column(db.String(80), nullable=False)
-    # faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.id'), nullable=False)
-    # grades = db.relationship('Performance', backref='student', lazy=True)
+    email = db.Column(db.String(80), nullable=False, unique=True)
+    birth_date = db.Column(db.DateTime, nullable=False)
+    psw_hash = db.Column(db.String(100), nullable=False)
+    registered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
         return f"User({self.firstname}, {self.lastname})"
