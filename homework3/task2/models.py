@@ -7,8 +7,8 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(80), nullable=False)
-    firstname = db.Column(db.String(80), nullable=False, unique=True)
+    nickname = db.Column(db.String(80), nullable=False, unique=True)
+    firstname = db.Column(db.String(80), nullable=False)
     lastname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
     birth_date = db.Column(db.DateTime, nullable=False)
