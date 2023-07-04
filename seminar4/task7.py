@@ -90,11 +90,9 @@ def sum_async(arr):
             my_sum_async(arr, step_index * 2, step_index * 3),
             my_sum_async(arr, step_index * 3, step_index * 4),
         )
-        result = sum(loc_res)
+        return sum(loc_res)
 
-    asyncio.run(sum_main(arr))
-
-    return result
+    return asyncio.run(sum_main(arr))
 
 
 if __name__ == '__main__':
