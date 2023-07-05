@@ -76,21 +76,28 @@ def sum_async(arr):
     result = 0
 
     async def my_sum_async(arr, start, end):
+        print(f"Start {start=}")
         local_result = 0
         for i in range(start, end):
             local_result += arr[i]
+        print(f"End {start=}")
         return local_result
 
     async def sum_main(arr):
         nonlocal result
         step_index = len(arr) // 4
-        loc_res = await asyncio.gather(
-            my_sum_async(arr, 0, step_index * 1),
-            my_sum_async(arr, step_index * 1, step_index * 2),
-            my_sum_async(arr, step_index * 2, step_index * 3),
-            my_sum_async(arr, step_index * 3, step_index * 4),
-        )
-        return sum(loc_res)
+        async with asyncio.TaskGroup() as tg:
+            task1 = tg.create_task(my_sum_async(arr, 0, step_index * 1))
+            task2 = tg.create_task(my_sum_async(arr, step_index * 1, step_index * 2))
+            task3 = tg.create_task(my_sum_async(arr, step_index * 2, step_index * 3))
+            task4 = tg.create_task(my_sum_async(arr, step_index * 3, step_index * 4))
+
+        result += task1.result()
+        result += task2.result()
+        result += task3.result()
+        result += task4.result()
+
+        return result
 
     return asyncio.run(sum_main(arr))
 
