@@ -1,11 +1,13 @@
 import asyncio
 import aiohttp
 from pathlib import Path
+import aiofiles
+import aiofiles.os
 
 
 async def _get_url_text_worker(directory: Path, queue: asyncio.Queue):
     if not directory.exists():
-        directory.mkdir(parents=True)
+        await aiofiles.os.makedirs(directory, exist_ok=True)
 
     async with aiohttp.ClientSession() as session:
         while True:
@@ -14,8 +16,8 @@ async def _get_url_text_worker(directory: Path, queue: asyncio.Queue):
                 async with session.get(url) as response:
                     text = await response.text()
                     file = directory.joinpath(url.replace('https://', '').replace('.', '_').replace('/', '') + '.html')
-                    with file.open('w', encoding='utf-8') as f_writer:
-                        f_writer.write(text)
+                    async with aiofiles.open(file, 'w', encoding='utf-8') as f_writer:
+                        await f_writer.write(text)
             except Exception as e:
                 print(f"Не удалось загрузить данные {url=}")
             queue.task_done()
