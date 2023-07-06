@@ -11,13 +11,22 @@ from pathlib import Path
 from task2_threading import download_img_threading
 from task2_multiprocessing import download_img_multiprocessing
 from task2_async import download_img_async
+import argparse
 
 if __name__ == '__main__':
-    with open('task2_urls.txt', 'r', encoding='utf-8') as f:
-        url_list = f.readlines()
+    parser = argparse.ArgumentParser(description='Программа для скачивания файлов по заданным URL')
+    parser.add_argument('-f', '--file', type=str, help='имя файла, содержащего список URL')
+    parser.add_argument('-t', action='store_true', help='Запускать скачивание в многопоточном режиме')
+    parser.add_argument('-p', action='store_true', help='Запускать скачивание в многопроцессорном режиме')
+    parser.add_argument('-a', action='store_true', help='Запускать скачивание в асинхронном режиме')
+    args = parser.parse_args()
+    print(args)
 
-    url_list = list(map(str.strip, url_list))
+    # with open('task2_urls.txt', 'r', encoding='utf-8') as f:
+    #     url_list = f.readlines()
+    #
+    # url_list = list(map(str.strip, url_list))
 
-    download_img_threading(url_list, Path.cwd().joinpath('task2_files', 'threading'), 5)
-    download_img_multiprocessing(url_list, Path.cwd().joinpath('task2_files', 'multiprocessing'), 5)
-    download_img_async(url_list, Path.cwd().joinpath('task2_files', 'async'), 5)
+    # download_img_threading(url_list, Path.cwd().joinpath('task2_files', 'threading'), 5)
+    # download_img_multiprocessing(url_list, Path.cwd().joinpath('task2_files', 'multiprocessing'), 5)
+    # download_img_async(url_list, Path.cwd().joinpath('task2_files', 'async'), 5)
