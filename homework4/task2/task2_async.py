@@ -7,7 +7,7 @@ import time
 
 
 async def _download_img_worker(directory: Path, queue: asyncio.Queue, log_queue: asyncio.Queue):
-    task_name = ''
+    task_name = asyncio.current_task().get_name()
 
     if not directory.exists():
         await aiofiles.os.makedirs(directory, exist_ok=True)
@@ -51,7 +51,7 @@ async def _download_img_async(url_list: list[str], path: Path, task_count: int):
     q_log.put_nowait(f"Старт загрузки в асинхронном режиме")
     tasks = []
     for i in range(task_count):
-        new_task = asyncio.create_task(_download_img_worker(path, q, q_log))
+        new_task = asyncio.create_task(_download_img_worker(path, q, q_log), name=f'task{i}')
         tasks.append(new_task)
 
     await q.join()
