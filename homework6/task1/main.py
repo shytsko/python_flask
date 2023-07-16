@@ -17,9 +17,12 @@
 # ○ Изменение
 # ○ Удаление
 
-from db import database
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from user import user_router
+from good import good_router
+from order import order_router
+from services import service_router
+from db import database
 
 app = FastAPI()
 
@@ -34,5 +37,7 @@ async def shutdown():
     await database.disconnect()
 
 
+app.include_router(service_router, tags=["Service"])
 app.include_router(user_router, tags=["User"])
-
+app.include_router(good_router, tags=["Good"])
+app.include_router(order_router, tags=["Order"])

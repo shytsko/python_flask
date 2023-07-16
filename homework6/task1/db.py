@@ -1,41 +1,53 @@
-import datetime
-
-from databases import Database
-from sqlalchemy import MetaData, Table, Integer, String, Column, create_engine, Text, DECIMAL, Date, ForeignKey
+import databases
+import sqlalchemy
 from settings import settings
+from enum import StrEnum
 
 DATABASE_URL = settings.DATABASE_URL
-database = Database(DATABASE_URL)
-metadata = MetaData()
+database = databases.Database(DATABASE_URL)
+metadata = sqlalchemy.MetaData()
 
-users = Table(
+users = sqlalchemy.Table(
     "users",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("firstname", String(32), nullable=False),
-    Column("lastname", String(32), nullable=False),
-    Column("email", String(128), nullable=False),
-    Column("password", String(128), nullable=False)
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("firstname", sqlalchemy.String(32), nullable=False),
+    sqlalchemy.Column("lastname", sqlalchemy.String(32), nullable=False),
+    sqlalchemy.Column("email", sqlalchemy.String(128), nullable=False, unique=True),
+    sqlalchemy.Column("password", sqlalchemy.String(128), nullable=False)
 )
 
-goods = Table(
+goods = sqlalchemy.Table(
     "goods",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("name", String(32), nullable=False),
-    Column("description", Text(), nullable=False),
-    Column("price", DECIMAL(10, 2), default=0)
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String(100), nullable=False, unique=True),
+    sqlalchemy.Column("description", sqlalchemy.Text(), nullable=False),
+    sqlalchemy.Column("price", sqlalchemy.DECIMAL(10, 2), default=0)
 )
 
-orders = Table(
+
+class OrderStatus(StrEnum):
+    OPEN = "открыт"
+    FORMED = "формируется"
+    CONFIRMED = "подтвержден"
+    IN_DELIVERY = "в доставке"
+    DELIVERED = "доставлен"
+    CLOSED = "закрыт"
+
+
+orders = sqlalchemy.Table(
     "orders",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("date", Date(), default=datetime.datetime.now()),
-    Column("user_id", ForeignKey("users.id")),
-    Column("good_id", ForeignKey("goods.id"))
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("datetime_create", sqlalchemy.DateTime()),
+    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
+    sqlalchemy.Column("good_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("goods.id")),
+    sqlalchemy.Column("status", sqlalchemy.String(100), nullable=False, default=OrderStatus.OPEN)
 )
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-# metadata.drop_all()
-metadata.create_all(engine)
+
+def init_db():
+    engine = sqlalchemy.create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    metadata.drop_all(engine)
+    metadata.create_all(engine)

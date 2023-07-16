@@ -1,19 +1,20 @@
 from fastapi import APIRouter, HTTPException, status
 from passlib.context import CryptContext
-from db import users, database
-from models import UserIn, UserOut
+from models import UserIn, UserOut, UserUpdate
+from sqlalchemy import select
+from db import database, users
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 user_router = APIRouter()
 
 
-@user_router.get("/users", response_model=list[UserOut])
+@user_router.get("/users", summary="Get all users", response_model=list[UserOut])
 async def get_all_users():
     query = users.select()
     return await database.fetch_all(query)
 
 
-@user_router.get("/users/{user_id}", response_model=UserOut)
+@user_router.get("/users/{user_id}", summary="Get user by id", response_model=UserOut)
 async def get_user(user_id: int):
     query = users.select().where(users.c.id == user_id)
     user = await database.fetch_one(query)
@@ -22,7 +23,7 @@ async def get_user(user_id: int):
     return user
 
 
-@user_router.post("/users", response_model=UserOut)
+@user_router.post("/users", summary="Create new user", response_model=UserOut)
 async def create_user(new_user: UserIn):
     new_user.password = pwd_context.hash(new_user.password)
     query = users.insert().values(**new_user.dict())
@@ -31,19 +32,19 @@ async def create_user(new_user: UserIn):
     return await database.fetch_one(query)
 
 
-@user_router.put("/users/{user_id}", response_model=UserOut)
-async def update_user(user_id: int, new_user: UserIn):
-    new_user.password = pwd_context.hash(new_user.password)
-    query = users.update().where(users.c.id == user_id).values(**new_user.dict())
+@user_router.put("/users/{user_id}", summary="Update user", response_model=UserOut)
+async def update_user(user_id: int, update_user_data: UserUpdate):
+    update_data = {k: v for k, v in update_user_data.dict().items() if v is not None}
+    if "password" in update_data:
+        update_data["password"] = pwd_context.hash(update_data["password"])
+    query = users.update().where(users.c.id == user_id).values(**update_data)
     await database.execute(query)
     query = users.select().where(users.c.id == user_id)
     return await database.fetch_one(query)
 
 
-@user_router.delete("/users/{user_id}")
+@user_router.delete("/users/{user_id}", summary="Delete user")
 async def delete_user(user_id: int):
     query = users.delete().where(users.c.id == user_id)
-    res = await database.execute(query)
-    if res > 0:
-        return {'message': 'User deleted'}
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    await database.execute(query)
+    return {'message': 'User deleted'}
