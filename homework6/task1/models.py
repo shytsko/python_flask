@@ -1,4 +1,3 @@
-from __future__ import annotations
 from decimal import Decimal
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
@@ -30,10 +29,6 @@ class UserOut(UserBase):
     id: int
 
 
-class UserOrderOut(UserOut):
-    orders: list[OrderOutByUser]
-
-
 class GoodBase(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     description: str = Field(..., min_length=2)
@@ -55,10 +50,6 @@ class GoodUpdate(BaseModel):
     name: Optional[str] = Field(min_length=2, max_length=100)
     description: Optional[str] = Field(min_length=2)
     price: Optional[Decimal] = Field(max_digits=10, decimal_places=2, gt=0)
-
-
-class GoodOrderOut(GoodOut):
-    orders: list[OrderOutByGood]
 
 
 class OrderBase(BaseModel):
@@ -84,12 +75,12 @@ class OrderOutByUser(OrderBase):
     good: GoodOut
 
 
-class OrderOutByGood(OrderBase):
-    user: UserOut
-
-
 class OrderUpdate(BaseModel):
     datetime_create: Optional[datetime.datetime]
     status: Optional[OrderStatus]
     user_id: Optional[int]
     good_id: Optional[int]
+
+
+class UserOrderOut(UserOut):
+    orders: list[OrderOutByUser]

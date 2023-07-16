@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from models import OrderIn, OrderOut, OrderUpdate, UserOut, GoodOut
+from models import OrderIn, OrderOut, OrderUpdate, UserOut, GoodOut, UserOrderOut, OrderOutByUser
 from db import database, orders, users, goods
 from sqlalchemy import select
 
@@ -54,6 +54,32 @@ async def get_order(order_id: int):
     if order:
         return order
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
+
+@order_router.get("/orders/byuser/{user_id}", summary="Get order by user", response_model=UserOrderOut)
+async def get_users_order(user_id: int):
+    query = f'''
+        SELECT orders.id, orders.datetime_create, orders.status, users.id AS user_id, users.firstname,
+               users.lastname, users.email, goods.id AS good_id, goods.name, goods.description, goods.price
+        FROM orders
+        JOIN users ON orders.user_id = users.id
+        JOIN goods ON orders.good_id = goods.id
+        WHERE users.id = {user_id}
+    '''
+    rows = await database.fetch_all(query)
+    result = UserOrderOut(id=rows[0].user_id,
+                          firstname=rows[0].firstname,
+                          lastname=rows[0].lastname,
+                          email=rows[0].email,
+                          orders=[OrderOutByUser(id=row.id,
+                                                 datetime_create=row.datetime_create,
+                                                 status=row.status,
+                                                 good=GoodOut(id=row.good_id,
+                                                              name=row.name,
+                                                              description=row.description,
+                                                              price=row.price))
+                                  for row in rows])
+    return result
 
 
 @order_router.post("/orders", summary="Create new order", response_model=OrderOut)
