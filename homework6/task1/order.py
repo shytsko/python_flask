@@ -1,20 +1,26 @@
 from fastapi import APIRouter, HTTPException, status
 from models import OrderIn, OrderOut, OrderUpdate, UserOut, GoodOut, UserOrderOut, OrderOutByUser
 from db import database, orders, users, goods
-from sqlalchemy import select
+from sqlalchemy import select, alias
 
 order_router = APIRouter()
 
 
 async def get_order_data(order_id: int) -> OrderOut | None:
-    query = f'''
-        SELECT orders.id, orders.datetime_create, orders.status, users.id AS user_id, users.firstname,
-               users.lastname, users.email, goods.id AS good_id, goods.name, goods.description, goods.price
-        FROM orders
-        JOIN users ON orders.user_id = users.id
-        JOIN goods ON orders.good_id = goods.id
-        WHERE orders.id = {order_id}
-    '''
+    query = select([orders.c.id, orders.c.datetime_create, orders.c.status,
+                    users.c.id.label("user_id"), users.c.firstname, users.c.lastname, users.c.email,
+                    goods.c.id.label("good_id"), goods.c.name, goods.c.description, goods.c.price]). \
+        join(users, orders.c.user_id == users.c.id). \
+        join(goods, orders.c.good_id == goods.c.id). \
+        where(orders.c.id == order_id)
+    # query = f'''
+    #     SELECT orders.id, orders.datetime_create, orders.status, users.id AS user_id, users.firstname,
+    #            users.lastname, users.email, goods.id AS good_id, goods.name, goods.description, goods.price
+    #     FROM orders
+    #     JOIN users ON orders.user_id = users.id
+    #     JOIN goods ON orders.good_id = goods.id
+    #     WHERE orders.id = {order_id}
+    # '''
     order = await database.fetch_one(query)
     if order:
         return OrderOut(id=order.id,
@@ -29,15 +35,18 @@ async def get_order_data(order_id: int) -> OrderOut | None:
 
 @order_router.get("/orders", summary="Get all orders", response_model=list[OrderOut])
 async def get_all_orders():
-    # query = select([orders, users, goods]).join(users, orders.c.user_id == users.c.id).\
-    #     join(goods, orders.c.good_id == goods.c.id)
-    query = '''
-        SELECT orders.id, orders.datetime_create, orders.status, users.id AS user_id, users.firstname,
-               users.lastname, users.email, goods.id AS good_id, goods.name, goods.description, goods.price
-        FROM orders
-        JOIN users ON orders.user_id = users.id
-        JOIN goods ON orders.good_id = goods.id
-    '''
+    query = select([orders.c.id, orders.c.datetime_create, orders.c.status,
+                    users.c.id.label("user_id"), users.c.firstname, users.c.lastname, users.c.email,
+                    goods.c.id.label("good_id"), goods.c.name, goods.c.description, goods.c.price]). \
+        join(users, orders.c.user_id == users.c.id). \
+        join(goods, orders.c.good_id == goods.c.id)
+    # query = '''
+    #     SELECT orders.id, orders.datetime_create, orders.status, users.id AS user_id, users.firstname,
+    #            users.lastname, users.email, goods.id AS good_id, goods.name, goods.description, goods.price
+    #     FROM orders
+    #     JOIN users ON orders.user_id = users.id
+    #     JOIN goods ON orders.good_id = goods.id
+    # '''
     rows = await database.fetch_all(query)
     result = [OrderOut(id=row.id,
                        datetime_create=row.datetime_create,
