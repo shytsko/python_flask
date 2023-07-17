@@ -19,7 +19,11 @@ class TaskOut(Task):
     id: int
 
 
-class TaskPut(BaseModel):
-    title: Optional[str]
-    description: Optional[str]
-    status: Optional[TaskStatus]
+# class TaskPut(BaseModel):
+#     title: Optional[str]
+#     description: Optional[str]
+#     status: Optional[TaskStatus]
+
+
+class TaskPut(Task):
+    __annotations__ = {k: Optional[v] for k, v in Task.__annotations__.items()}
