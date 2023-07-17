@@ -1,4 +1,4 @@
-from pymongo import mongo_client, ASCENDING
+from pymongo import mongo_client
 from settings import settings
 
 client = mongo_client.MongoClient(settings.DATABASE_URL)

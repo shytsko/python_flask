@@ -5,7 +5,7 @@ from typing import Optional
 class TaskBase(BaseModel):
     title: str
     description: str
-    done: bool
+    done: bool = False
 
 
 class TaskIn(TaskBase):
@@ -13,7 +13,7 @@ class TaskIn(TaskBase):
 
 
 class TaskOut(TaskBase):
-    _id: str
+    id: str
 
 
 class TaskUpdate(BaseModel):
